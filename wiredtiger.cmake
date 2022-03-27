@@ -1,4 +1,4 @@
-function (build_git_project target repository tag install_dir)
+function (build_git_project target repository tag)
     set(TARGET_DIR "${CMAKE_CURRENT_BINARY_DIR}/ExternalProjects/${target}")
 
     set(CMAKELIST_CONTENT "
@@ -13,7 +13,7 @@ function (build_git_project target repository tag install_dir)
             CMAKE_GENERATOR_PLATFORM \"${CMAKE_GENERATOR_PLATFORM}\"
             CMAKE_GENERATOR_TOOLSET \"${CMAKE_GENERATOR_TOOLSET}\"
             CMAKE_GENERATOR_INSTANCE \"${CMAKE_GENERATOR_INSTANCE}\"
-            CMAKE_ARGS ${ARGN} -DCMAKE_INSTALL_PREFIX=${install_dir})
+            CMAKE_ARGS ${ARGN})
 
         add_custom_target(build_external_project)
         add_dependencies(build_external_project ${target})
@@ -38,6 +38,6 @@ function (build_git_project target repository tag install_dir)
 endfunction()
 
 function(add_wiredtiger lib tag install_dir)
-    build_git_project(wiredtiger_external "https://github.com/wiredtiger/wiredtiger.git" ${tag} ${install_dir})
+    build_git_project(wiredtiger_external "https://github.com/wiredtiger/wiredtiger.git" ${tag} "-DCMAKE_INSTALL_PREFIX=${install_dir}")
     find_library(${lib} wiredtiger PATHS "${install_dir}/lib" NO_DEFAULT_PATH REQUIRED)
 endfunction()
