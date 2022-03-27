@@ -3,7 +3,7 @@
 #include <memory>
 #include <wiredtiger.h>
 
-export module wtlab;
+export module wtapi;
 
 export class DbError : public std::runtime_error {
 public:

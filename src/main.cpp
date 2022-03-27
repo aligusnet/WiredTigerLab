@@ -1,6 +1,6 @@
 #include <iostream>
 
-import wtlab;
+import wtapi;
 
 void test(Application& app) {
     auto session = app.open();

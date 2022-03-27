@@ -12,6 +12,6 @@ set(INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/install)
 
 add_wiredtiger(wiredtiger "mongodb-5.3.0" ${INSTALL_DIR})
 
-add_executable(wtlab "src/main.cpp" "src/application.ixx" )
+add_executable(wtlab "src/main.cpp" "src/wtapi.ixx" )
 target_include_directories(wtlab PUBLIC ${INSTALL_DIR}/include)
 target_link_libraries(wtlab ${wiredtiger})
