@@ -3,3 +3,4 @@ out
 /third_party
 .vs
 CMakeSettings.json
+*.pdb

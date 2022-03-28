@@ -1,28 +1,34 @@
 #include <iostream>
+#include <vector>
+#include <string>
 
 import wtapi;
+import bson;
 
 void test(Application& app) {
     auto session = app.open();
 
-    session->create("table:access", "key_format=S,value_format=S");
+    session->create("table:autoinc", "key_format=r,value_format=u");
+    auto cursor = session->open("table:autoinc", "append");
 
-    auto cursor = session->open("table:access");
-    cursor->setKey("key1");
-    cursor->setValue("value1");
-    cursor->insert();
+    std::vector<std::string> records{ "{\"hello\": \"world\"}", "{\"integer\": 100}", "{\"double\": 111.11}" };
+    for (auto&& rec : records) {
+        auto bson = BsonObject::from_json(rec);
+        cursor->setBsonValue(*bson);
+        cursor->insert();
+    }
 
     cursor->reset();
 
     while (cursor->next()) {
-        const char* key, * value;
+        uint64_t key;
         cursor->getKey(&key);
-        cursor->getValue(&value);
-        std::cout << "Got record: " << key << " : " << value << std::endl;
+        auto value = cursor->getBsonValue();
+        std::cout << "Got record: " << key << " : " << value->toJson() << std::endl;
     }
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     Application app{ "C:/tmp" };
     try {
         test(app);
@@ -31,6 +37,6 @@ int main(int argc, char **argv) {
         std::cerr << "Error: " << error.what() << std::endl;
         return 1;
     }
-    
+
     return 0;
 }
